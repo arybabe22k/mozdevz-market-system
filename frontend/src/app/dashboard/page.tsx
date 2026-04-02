@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   const recommendations = await fetchRecommendations();
 
   return (
-    <main className="p-6 space-y-8">
+    <main className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Dashboard MOZDEVZ</h1>
         <p className="mt-2 text-gray-600">
@@ -24,22 +24,22 @@ export default async function DashboardPage() {
 
       <section>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="p-4 rounded bg-gray-100">
+          <div className="p-4 rounded bg-white border shadow-sm">
             <p className="text-sm text-gray-500">Total Produtos</p>
             <p className="text-2xl font-bold">{overview.total_products}</p>
           </div>
 
-          <div className="p-4 rounded bg-gray-100">
+          <div className="p-4 rounded bg-white border shadow-sm">
             <p className="text-sm text-gray-500">Total Vendas</p>
             <p className="text-2xl font-bold">{overview.total_sales_quantity}</p>
           </div>
 
-          <div className="p-4 rounded bg-gray-100">
+          <div className="p-4 rounded bg-white border shadow-sm">
             <p className="text-sm text-gray-500">Stock Actual</p>
             <p className="text-2xl font-bold">{overview.current_stock_quantity}</p>
           </div>
 
-          <div className="p-4 rounded bg-gray-100">
+          <div className="p-4 rounded bg-white border shadow-sm">
             <p className="text-sm text-gray-500">Alertas</p>
             <p className="text-2xl font-bold">{overview.alerts_count}</p>
           </div>
@@ -48,7 +48,7 @@ export default async function DashboardPage() {
 
       <section>
         <h2 className="text-xl font-semibold mb-4">Top Products</h2>
-        <div className="overflow-x-auto rounded border">
+        <div className="overflow-x-auto rounded border bg-white">
           <table className="min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
 
       <section>
         <h2 className="text-xl font-semibold mb-4">Stock Status</h2>
-        <div className="overflow-x-auto rounded border">
+        <div className="overflow-x-auto rounded border bg-white">
           <table className="min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -88,7 +88,19 @@ export default async function DashboardPage() {
                   <td className="p-3">{item.total_stock}</td>
                   <td className="p-3">{item.total_sales}</td>
                   <td className="p-3">{item.current_stock}</td>
-                  <td className="p-3">{item.status}</td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 rounded text-sm ${
+                        item.status === "baixo"
+                          ? "bg-red-100 text-red-700"
+                          : item.status === "alto"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -114,7 +126,7 @@ export default async function DashboardPage() {
 
       <section>
         <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
-        <div className="overflow-x-auto rounded border">
+        <div className="overflow-x-auto rounded border bg-white">
           <table className="min-w-full border-collapse">
             <thead className="bg-gray-100">
               <tr>

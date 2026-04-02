@@ -20,6 +20,16 @@ export default function ProductsPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+     if (!name.trim()) {
+     alert("O nome do produto é obrigatório.");
+      return;
+        }
+
+    if (!price || Number(price) <= 0) {
+    alert("O preço deve ser maior que zero.");
+    return;
+        }
+
     try {
       const response = await fetch("http://127.0.0.1:8000/products", {
         method: "POST",
@@ -61,6 +71,7 @@ export default function ProductsPage() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full p-2 border rounded"
+           required
         />
 
         <input
@@ -69,6 +80,7 @@ export default function ProductsPage() {
           value={price}
           onChange={(e) => setPrice(e.target.value)}
           className="w-full p-2 border rounded"
+           required
         />
 
         <button className="bg-blue-500 text-white px-4 py-2 rounded">

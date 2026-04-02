@@ -1,123 +1,154 @@
-"use client";
+import {
+  fetchDashboardOverview,
+  fetchTopProducts,
+  fetchStockStatus,
+  fetchAlerts,
+  fetchRecommendations,
+} from "../../lib/api";
 
-import { useEffect, useState } from "react";
-
-export default function SalesPage() {
-  const [products, setProducts] = useState<any[]>([]);
-  const [sales, setSales] = useState<any[]>([]);
-  const [productId, setProductId] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [price, setPrice] = useState("");
-
-  const loadProducts = async () => {
-    const res = await fetch("http://127.0.0.1:8000/products");
-    const data = await res.json();
-    setProducts(data);
-  };
-
-  const loadSales = async () => {
-    const res = await fetch("http://127.0.0.1:8000/sales");
-    const data = await res.json();
-    setSales(data);
-  };
-
-  useEffect(() => {
-    loadProducts();
-    loadSales();
-  }, []);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/sales", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          product_id: Number(productId),
-          quantity: Number(quantity),
-          price: Number(price),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao registar venda");
-      }
-
-      setProductId("");
-      setQuantity("");
-      setPrice("");
-
-      await loadSales();
-
-      alert("Venda registada com sucesso!");
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao registar venda");
-    }
-  };
+export default async function DashboardPage() {
+  const overview = await fetchDashboardOverview();
+  const topProducts = await fetchTopProducts();
+  const stockStatus = await fetchStockStatus();
+  const alerts = await fetchAlerts();
+  const recommendations = await fetchRecommendations();
 
   return (
-    <main className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Registar Vendas</h1>
-
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-        <select
-          value={productId}
-          onChange={(e) => setProductId(e.target.value)}
-          className="w-full p-2 border rounded"
-        >
-          <option value="">Seleciona um produto</option>
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="number"
-          placeholder="Quantidade"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-
-        <input
-          type="number"
-          placeholder="Preço"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="w-full p-2 border rounded"
-        />
-
-        <button className="bg-green-600 text-white px-4 py-2 rounded">
-          Registar Venda
-        </button>
-      </form>
-
+    <main className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Lista de Vendas</h2>
+        <h1 className="text-3xl font-bold">Dashboard MOZDEVZ</h1>
+        <p className="mt-2 text-gray-600">
+          Sistema de previsão de procura para mercados informais.
+        </p>
+      </div>
 
-        <div className="border rounded">
-          {sales.length === 0 ? (
-            <p className="p-4 text-gray-500">Nenhuma venda registada ainda.</p>
+      <section>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="p-4 rounded bg-white border shadow-sm">
+            <p className="text-sm text-gray-500">Total Produtos</p>
+            <p className="text-2xl font-bold">{overview.total_products}</p>
+          </div>
+
+          <div className="p-4 rounded bg-white border shadow-sm">
+            <p className="text-sm text-gray-500">Total Vendas</p>
+            <p className="text-2xl font-bold">{overview.total_sales_quantity}</p>
+          </div>
+
+          <div className="p-4 rounded bg-white border shadow-sm">
+            <p className="text-sm text-gray-500">Stock Actual</p>
+            <p className="text-2xl font-bold">{overview.current_stock_quantity}</p>
+          </div>
+
+          <div className="p-4 rounded bg-white border shadow-sm">
+            <p className="text-sm text-gray-500">Alertas</p>
+            <p className="text-2xl font-bold">{overview.alerts_count}</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Top Products</h2>
+        <div className="overflow-x-auto rounded border bg-white">
+          <table className="min-w-full border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 text-left">Produto</th>
+                <th className="p-3 text-left">Total Vendido</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topProducts.map((product: any) => (
+                <tr key={product.product_id} className="border-t">
+                  <td className="p-3">{product.product_name}</td>
+                  <td className="p-3">{product.total_sold}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Stock Status</h2>
+        <div className="overflow-x-auto rounded border bg-white">
+          <table className="min-w-full border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 text-left">Produto</th>
+                <th className="p-3 text-left">Stock Total</th>
+                <th className="p-3 text-left">Vendas</th>
+                <th className="p-3 text-left">Stock Actual</th>
+                <th className="p-3 text-left">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stockStatus.map((item: any) => (
+                <tr key={item.product_id} className="border-t">
+                  <td className="p-3">{item.product_name}</td>
+                  <td className="p-3">{item.total_stock}</td>
+                  <td className="p-3">{item.total_sales}</td>
+                  <td className="p-3">{item.current_stock}</td>
+                  <td className="p-3">
+                    <span
+                      className={`px-2 py-1 rounded text-sm ${
+                        item.status === "baixo"
+                          ? "bg-red-100 text-red-700"
+                          : item.status === "alto"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Alerts</h2>
+        <div className="space-y-3">
+          {alerts.length === 0 ? (
+            <p className="text-gray-500">Sem alertas no momento.</p>
           ) : (
-            sales.map((sale) => (
-              <div
-                key={sale.id}
-                className="p-3 border-b flex justify-between"
-              >
-                <span>Produto ID: {sale.product_id}</span>
-                <span>Qtd: {sale.quantity}</span>
-                <span>Preço: {sale.price} MZN</span>
+            alerts.map((alert: any, index: number) => (
+              <div key={index} className="p-4 rounded border bg-red-50">
+                <p className="font-semibold">{alert.type}</p>
+                <p className="text-sm text-gray-700">{alert.message}</p>
               </div>
             ))
           )}
         </div>
-      </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Recommendations</h2>
+        <div className="overflow-x-auto rounded border bg-white">
+          <table className="min-w-full border-collapse">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 text-left">Produto</th>
+                <th className="p-3 text-left">Stock Actual</th>
+                <th className="p-3 text-left">Procura Prevista</th>
+                <th className="p-3 text-left">Comprar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recommendations.map((item: any) => (
+                <tr key={item.product_id} className="border-t">
+                  <td className="p-3">{item.product_name}</td>
+                  <td className="p-3">{item.current_stock}</td>
+                  <td className="p-3">{item.predicted_demand}</td>
+                  <td className="p-3 font-semibold">{item.recommended_purchase}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
   );
 }
