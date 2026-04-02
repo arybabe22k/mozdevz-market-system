@@ -1,4 +1,4 @@
-import { fetchDashboardOverview, fetchTopProducts } from "../../lib/api";
+import { fetchDashboardOverview } from "../lib/api";
 
 export default async function DashboardPage() {
   const data = await fetchDashboardOverview();
