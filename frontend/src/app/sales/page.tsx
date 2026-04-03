@@ -16,9 +16,9 @@ export default async function DashboardPage() {
   return (
     <main className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard MOZDEVZ</h1>
+        <h1 className="text-3xl font-bold">TirhaTech</h1>
         <p className="mt-2 text-gray-600">
-          Sistema de previsão de procura para mercados informais.
+           Plataforma inteligente para gestão de produtos, vendas, stock e previsão de procura em mercados informais.
         </p>
       </div>
 

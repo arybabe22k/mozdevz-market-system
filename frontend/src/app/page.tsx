@@ -6,7 +6,7 @@ export default function HomePage() {
       {/* HEADER */}
       <section className="bg-white p-10 rounded-2xl shadow-md border">
         <h1 className="text-5xl font-bold text-gray-900">
-          Sistema MOZDEVZ 🚀
+         TirhaTech
         </h1>
         <p className="mt-4 text-gray-600 text-lg max-w-2xl">
           Plataforma inteligente para gestão de produtos, vendas, stock e previsão de procura em mercados informais.

@@ -11,7 +11,7 @@ export default function RootLayout({
       <body className="bg-gray-50 text-gray-900">
         <div className="min-h-screen flex">
           <aside className="w-64 bg-white border-r p-6 shadow-sm">
-            <h1 className="text-2xl font-bold mb-6 text-gray-900">MOZDEVZ</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900">TirhaTech</h1>
 
             <nav className="space-y-2">
               {[
